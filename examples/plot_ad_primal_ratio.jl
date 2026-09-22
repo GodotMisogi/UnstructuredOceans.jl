@@ -172,9 +172,11 @@ end
 println("\nWrote $RATIO_CSV")
 
 # --- Figure: ratio vs cell count, one line per backend --------------------------
-bmarker = Dict("CUDA" => :circle, "AMD" => :diamond, "GPU" => :circle, "CPU" => :utriangle)
-bcolor  = Dict("CUDA" => :dodgerblue3, "AMD" => :firebrick3, "GPU" => :dodgerblue3,
-               "CPU" => :darkorange2)
+# Canonical backend styling, shared across all benchmark plots (see plot_kernel_benchmark.jl).
+bcolor  = Dict("CPU" => :darkorange2, "CUDA" => :seagreen4, "AMD" => :firebrick3,
+               "oneAPI" => :dodgerblue3, "GPU" => :seagreen4)
+bmarker = Dict("CPU" => :utriangle, "CUDA" => :circle, "AMD" => :diamond,
+               "oneAPI" => :rect, "GPU" => :circle)
 
 problem  = only(problems)
 probname = probname_of(problem)
@@ -193,8 +195,8 @@ for b in backends
     ys = Float64[ad_best[k].sstep / fwd_best[k].sstep for k in ks]
     isempty(xs) && continue
     scatterlines!(ax, xs, ys;
-                  color = get(bcolor, b, :black),
-                  marker = get(bmarker, b, :diamond), markersize = 11,
+                  color = get(bcolor, b, :gray30),
+                  marker = get(bmarker, b, :xcross), markersize = 11,
                   linewidth = 2, label = b)
 end
 
